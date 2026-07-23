@@ -26,13 +26,18 @@ const dbPath = getDatabasePath();
 
 const globalForDb = global as unknown as { db?: Database.Database };
 
-export const db = globalForDb.db || new Database(dbPath);
+export const db = globalForDb.db || new Database(dbPath, { timeout: 10000 });
 
 if (process.env.NODE_ENV !== 'production') {
   globalForDb.db = db;
 }
 
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+try {
+  db.pragma('journal_mode = WAL');
+  db.pragma('busy_timeout = 10000');
+  db.pragma('foreign_keys = ON');
+} catch (err) {
+  console.warn('SQLite pragma warning:', err);
+}
 
 export default db;
