@@ -13,12 +13,12 @@ export interface UserPayload {
   exp?: number;
 }
 
-export function hashPassword(password: str): string {
+export function hashPassword(password: string): string {
   const salt = bcrypt.genSaltSync(10);
   return bcrypt.hashSync(password, salt);
 }
 
-export function verifyPassword(plainPassword: str, hashedPassword: str): boolean {
+export function verifyPassword(plainPassword: string, hashedPassword: string): boolean {
   try {
     return bcrypt.compareSync(plainPassword, hashedPassword);
   } catch (err) {
